@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LumberCalculator.Windows;
@@ -11,7 +12,6 @@ namespace LumberCalculator
         private string _twoBySix = "2x6";
         private Dictionary<string, LumberDimension> _dimensions;
         private static decimal _bladeWidth = 0.125m; //one eighth is typical blade width
-        //private static decimal _minimumScrapLength = _bladeWidth * 4; //TODO: make configurable
 
         private ObservableCollection<StoreLumber> _availableLumber;
 
@@ -58,6 +58,18 @@ namespace LumberCalculator
             {
                 _minimumScrapLength = value;
                 OnPropertyChanged(nameof(MinimumScrapLength));
+            }
+        }
+
+        private decimal _estimatedPrice;
+
+        public decimal EstimatedPrice
+        {
+            get => _estimatedPrice;
+            set
+            {
+                _estimatedPrice = value;
+                OnPropertyChanged(nameof(EstimatedPrice));
             }
         }
 
@@ -113,8 +125,6 @@ namespace LumberCalculator
                     Length = 25.766m,
                     Quantity = 4,
                 },
-
-                //tests
                 new CutListLumber
                 {
                     Identifier = 4,
@@ -174,9 +184,7 @@ namespace LumberCalculator
                     {
                         currentQuantity++;
 
-                        StoreLumber selectedStoreLumber = item.SelectedStoreLumber.Clone();
-
-                        priceItem.CutLengths.Add(new CutDimension(actualWidth, selectedStoreLumber.Dimensions, item.Length, item.Identifier));
+                        priceItem.CutLengths.Add(new CutDimension(actualWidth, priceItem.Dimensions, item.Length, item.Identifier));
                     }
 
                     if (currentQuantity >= item.Quantity || !PriceList.Any(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength - MinimumScrapLength > actualWidth))
@@ -206,7 +214,7 @@ namespace LumberCalculator
                         currentWidth += actualWidth;
                     }
 
-                    StoreLumber selectedStoreLumber = item.SelectedStoreLumber.Clone();
+                    StoreLumber selectedStoreLumber = item.SelectedStoreLumber.Clone(new Guid());
 
                     for (int i = 0; i < iterationQuantity; i++)
                     {
@@ -218,7 +226,32 @@ namespace LumberCalculator
                 }
             }
 
+            OptimizePriceList();
+
+            EstimatedPrice = PriceList?.Select(o => o.Price).Sum(o => o) ?? 0.0m;
+
             RefreshUI();
+        }
+
+        public void OptimizePriceList()
+        {
+            List<StoreLumber> priceListItemsToRemove = new List<StoreLumber>();
+
+            foreach (StoreLumber lumber in PriceList)
+            {
+                var moveCandidate = PriceList.FirstOrDefault(o => 
+                    o.Dimensions.Equals(lumber.Dimensions) 
+                    && o.ScrapLength - MinimumScrapLength > lumber.TotalCutLength
+                    && o.Identifier != lumber.Identifier);
+
+                if (moveCandidate != null)
+                {
+                    moveCandidate.CutLengths.AddRange(lumber.CutLengths);
+                    priceListItemsToRemove.Add(lumber);
+                }
+            }
+
+            priceListItemsToRemove.ForEach(o => PriceList.Remove(o));
         }
 
         public void RefreshUI()

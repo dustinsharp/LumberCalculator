@@ -26,7 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid
@@ -146,6 +146,15 @@
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     Text="{Binding MinimumScrapLength}"></TextBox>
+                <Label
+                    VerticalAlignment="Center"
+                    Margin="5,0,0,0">Est. price:</Label>
+                <TextBlock VerticalAlignment="Center">$</TextBlock>
+                <TextBox
+                    Width="50pt"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding EstimatedPrice}"></TextBox>
             </StackPanel>
         </Grid>
     </Grid>
