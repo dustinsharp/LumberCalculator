@@ -10,7 +10,8 @@ namespace LumberCalculator
         private string _twoByFour = "2x4";
         private string _twoBySix = "2x6";
         private Dictionary<string, LumberDimension> _dimensions;
-        private decimal _bladeWidth = 0.125m; //one eighth is typical blade width
+        private static decimal _bladeWidth = 0.125m; //one eighth is typical blade width
+        //private static decimal _minimumScrapLength = _bladeWidth * 4; //TODO: make configurable
 
         private ObservableCollection<StoreLumber> _availableLumber;
 
@@ -48,8 +49,22 @@ namespace LumberCalculator
             }
         }
 
+        private decimal _minimumScrapLength;
+
+        public decimal MinimumScrapLength
+        {
+            get => _minimumScrapLength;
+            set
+            {
+                _minimumScrapLength = value;
+                OnPropertyChanged(nameof(MinimumScrapLength));
+            }
+        }
+
         public MainWindowViewModel()
         {
+            _minimumScrapLength = _bladeWidth * 4;
+
             _dimensions = new Dictionary<string, LumberDimension>
             {
                 {_twoByFour, new LumberDimension(_twoByFour, 1.5m, 3.5m)},
@@ -81,7 +96,7 @@ namespace LumberCalculator
                 {
                     Identifier = 1,
                     SelectedStoreLumber = twoBySix,
-                    Length = 48.0m - _bladeWidth,
+                    Length = 48.0m,
                     Quantity = 4,
                 },
                 new CutListLumber
@@ -153,9 +168,9 @@ namespace LumberCalculator
 
                 int currentQuantity = 0;
 
-                foreach (var priceItem in PriceList.Where(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength > item.Length))
+                foreach (var priceItem in PriceList.Where(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength - MinimumScrapLength > actualWidth))
                 {
-                    while (priceItem.ScrapLength > item.Length && currentQuantity < item.Quantity)
+                    while (priceItem.ScrapLength - MinimumScrapLength > actualWidth && currentQuantity < item.Quantity)
                     {
                         currentQuantity++;
 
@@ -164,7 +179,7 @@ namespace LumberCalculator
                         priceItem.CutLengths.Add(new CutDimension(actualWidth, selectedStoreLumber.Dimensions, item.Length, item.Identifier));
                     }
 
-                    if (currentQuantity >= item.Quantity || !PriceList.Any(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength > item.Length))
+                    if (currentQuantity >= item.Quantity || !PriceList.Any(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength - MinimumScrapLength > actualWidth))
                     {
                         break;
                     }
@@ -179,7 +194,7 @@ namespace LumberCalculator
                 {
                     int iterationQuantity = 0;
 
-                    while (currentWidth <= storeLumberWidth)
+                    while (currentWidth <= storeLumberWidth - MinimumScrapLength)
                     {
                         if (currentQuantity >= item.Quantity)
                         {

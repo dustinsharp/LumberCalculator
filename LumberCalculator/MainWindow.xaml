@@ -11,10 +11,11 @@
 
         <Style TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"></Setter>
-            <Setter Property="MinHeight" Value="20"></Setter>
+            <Setter Property="Height" Value="20"></Setter>
             <Setter Property="MinWidth" Value="70"></Setter>
             <Setter Property="Padding" Value="10,0"></Setter>
             <Setter Property="Margin" Value="5,0,0,0"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
         </Style>
     </Window.Resources>
     <Grid Margin="10">
@@ -25,7 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid
@@ -61,10 +62,17 @@
                                 <Grid
                                     HorizontalAlignment="Left"
                                     Margin="0,0,0,5">
-                                    <Rectangle
-                                        Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
-                                        Height="{Binding Dimensions.ActualWidth, Converter={StaticResource RectangleDimensionConverter}}" 
-                                        Stroke="Black"></Rectangle>
+                                    <StackPanel
+                                        Orientation="Horizontal">
+                                        <Rectangle
+                                            Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
+                                            Height="{Binding Dimensions.ActualWidth, Converter={StaticResource RectangleDimensionConverter}}" 
+                                            Stroke="Black"></Rectangle>
+
+                                        <TextBlock 
+                                            Margin="10,0,0,0"
+                                            Text="{Binding Description}"></TextBlock>
+                                    </StackPanel>
 
                                     <ItemsControl ItemsSource="{Binding CutLengths}">
                                         <ItemsControl.ItemsPanel>
@@ -101,7 +109,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Margin="0,10,0,0">
+            Margin="0,5,0,0">
             <DockPanel
                 HorizontalAlignment="Right">
                 <Button 
@@ -123,6 +131,22 @@
                     x:Name="btnRemoveCutlistItem" 
                     Click="btnRemoveCutlistItem_Click">Remove</Button>
             </DockPanel>
+        </Grid>
+
+        <Grid
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="0,5,0,0">
+            <StackPanel
+                Orientation="Horizontal">
+                <Label
+                    VerticalAlignment="Center">Minimum scrap width (inches):</Label>
+                <TextBox
+                    Width="50pt"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding MinimumScrapLength}"></TextBox>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

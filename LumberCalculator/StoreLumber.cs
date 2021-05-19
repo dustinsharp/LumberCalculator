@@ -10,5 +10,6 @@ namespace LumberCalculator
         public decimal Price { get; set; }
         public List<CutDimension> CutLengths { get; set; } = new List<CutDimension>();
         public decimal ScrapLength => CutLengths.Any() ? Length - CutLengths.Select(o => o.Length).Aggregate((a, d) => a + d) : Length;
+        public string Description => $"{Dimensions.Name} - {ScrapLength} inch scrap";
     }
 }
