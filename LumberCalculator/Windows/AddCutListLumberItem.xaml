@@ -1,0 +1,89 @@
+﻿<Window x:Class="LumberCalculator.Windows.AddCutListLumberItem"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LumberCalculator.Windows"
+        mc:Ignorable="d"
+        Title="AddCutListLumberItem" Height="175.5" Width="343.5">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="SnapsToDevicePixels" Value="True"></Setter>
+            <Setter Property="MinHeight" Value="20"></Setter>
+            <Setter Property="MinWidth" Value="70"></Setter>
+            <Setter Property="Padding" Value="10,0"></Setter>
+            <Setter Property="Margin" Value="5,0,0,0"></Setter>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,0,5">
+            Selected Store Lumber:
+        </Label>
+
+        <ComboBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,0,5"
+            ItemsSource="{Binding AvailableLumber}"
+            DisplayMemberPath="Dimensions.Name" 
+            SelectionChanged="ComboBox_SelectionChanged"
+            x:Name="cbSelectedStoreLumber"></ComboBox>
+
+        <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,0,5">
+            Length:
+        </Label>
+
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="{Binding NewCutListLumberItem.Length}"
+            Margin="0,0,0,5"></TextBox>
+
+        <Label
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,0,0,5">
+            Quantity:
+        </Label>
+
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Text="{Binding NewCutListLumberItem.Quantity}"
+            Margin="0,0,0,5"></TextBox>
+
+        <Grid
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <DockPanel
+                HorizontalAlignment="Right">
+                <Button
+                    x:Name="btnSave" Click="btnSave_Click">Save</Button>
+
+                <Button
+                    x:Name="btnClose" Click="btnClose_Click">Close</Button>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>

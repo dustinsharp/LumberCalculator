@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LumberCalculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Lumber Calculator" Height="450" Width="800">
     <Window.Resources>
         <local:RectangleDimensionConverter x:Key="RectangleDimensionConverter"/>
 

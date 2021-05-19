@@ -37,7 +37,7 @@ namespace LumberCalculator
             if (lvCutList.SelectedItem is CutListLumber item)
             {
                 _vm.CutList.Remove(item);
-                _vm.RefreshUI();
+                _vm.CalculateLumberNeeded();
             }
         }
     }

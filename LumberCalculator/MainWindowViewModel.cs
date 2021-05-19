@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using LumberCalculator.Windows;
 
 namespace LumberCalculator
 {
@@ -102,15 +103,36 @@ namespace LumberCalculator
                 new CutListLumber
                 {
                     Identifier = 4,
-                    SelectedStoreLumber = twoBySix,
-                    Length = 11.0m,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 17.5m,
                     Quantity = 4,
                 },
                 new CutListLumber
                 {
                     Identifier = 5,
                     SelectedStoreLumber = twoByFour,
-                    Length = 10.0m,
+                    Length = 18.5m,
+                    Quantity = 4,
+                },
+                new CutListLumber
+                {
+                    Identifier = 6,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 22.375m,
+                    Quantity = 4,
+                },
+                new CutListLumber
+                {
+                    Identifier = 7,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 11.0m,
+                    Quantity = 4,
+                },
+                new CutListLumber
+                {
+                    Identifier = 8,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 6.125m,
                     Quantity = 4,
                 },
             };
@@ -131,19 +153,18 @@ namespace LumberCalculator
 
                 int currentQuantity = 0;
 
-                foreach (var priceItem in PriceList.Where(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions)))
+                foreach (var priceItem in PriceList.Where(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength > item.Length))
                 {
-                    while (priceItem.ScrapLength > item.Length)
+                    while (priceItem.ScrapLength > item.Length && currentQuantity < item.Quantity)
                     {
                         currentQuantity++;
 
                         StoreLumber selectedStoreLumber = item.SelectedStoreLumber.Clone();
 
-                        PriceList.First(o => o.ScrapLength > item.Length)
-                            .CutLengths.Add(new CutDimension(actualWidth, selectedStoreLumber.Dimensions, item.Length, item.Identifier));
+                        priceItem.CutLengths.Add(new CutDimension(actualWidth, selectedStoreLumber.Dimensions, item.Length, item.Identifier));
                     }
 
-                    if (currentQuantity >= item.Quantity)
+                    if (currentQuantity >= item.Quantity || !PriceList.Any(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength > item.Length))
                     {
                         break;
                     }
@@ -197,6 +218,18 @@ namespace LumberCalculator
             int identifier = CutList.Any() ? CutList.Select(o => o.Identifier).Max() + 1 : 1;
 
             //Add UI to populate new cutlist item
+            var addCutListLumberItemWindow = new AddCutListLumberItem(identifier, AvailableLumber);
+            var result = addCutListLumberItemWindow.ShowDialog();
+
+            if (result == true)
+            {
+                CutList.Add(addCutListLumberItemWindow.NewCutListLumberItem);
+
+                //PriceList.Clear();
+                //RefreshUI();
+
+                CalculateLumberNeeded();
+            }
         }
     }
 }
