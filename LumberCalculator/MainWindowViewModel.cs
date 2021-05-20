@@ -129,22 +129,22 @@ namespace LumberCalculator
                 {
                     Identifier = 4,
                     SelectedStoreLumber = twoByFour,
-                    Length = 17.5m,
-                    Quantity = 4,
+                    Length = 17.375m,
+                    Quantity = 2,
                 },
                 new CutListLumber
                 {
                     Identifier = 5,
                     SelectedStoreLumber = twoByFour,
-                    Length = 18.5m,
-                    Quantity = 4,
+                    Length = 22.375m,
+                    Quantity = 2,
                 },
                 new CutListLumber
                 {
                     Identifier = 6,
                     SelectedStoreLumber = twoByFour,
-                    Length = 22.375m,
-                    Quantity = 4,
+                    Length = 18.4375m,
+                    Quantity = 2,
                 },
                 new CutListLumber
                 {
@@ -160,6 +160,20 @@ namespace LumberCalculator
                     Length = 6.125m,
                     Quantity = 4,
                 },
+                new CutListLumber
+                {
+                    Identifier = 9,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 13.8125m,
+                    Quantity = 4,
+                },
+                new CutListLumber
+                {
+                    Identifier = 10,
+                    SelectedStoreLumber = twoByFour,
+                    Length = 14.0625m,
+                    Quantity = 8,
+                }
             };
 
             PriceList = new ObservableCollection<StoreLumber>();
