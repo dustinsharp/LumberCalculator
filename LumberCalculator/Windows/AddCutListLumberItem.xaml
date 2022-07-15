@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LumberCalculator.Windows"
         mc:Ignorable="d"
-        Title="AddCutListLumberItem" Height="175.5" Width="343.5">
+        Title="AddCutListLumberItem" Height="175.5" Width="343.5"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"></Setter>

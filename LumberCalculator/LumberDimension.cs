@@ -12,5 +12,19 @@
             ActualHeight = actualHeight;
             ActualWidth = actualWidth;
         }
+
+        public override bool Equals(object obj)
+        {
+            var item = (LumberDimension)obj;
+
+            if (item != null)
+            {
+                return
+                    item.ActualHeight == this.ActualHeight &&
+                    item.ActualWidth == this.ActualWidth;
+            }
+
+            return false;
+        }
     }
 }

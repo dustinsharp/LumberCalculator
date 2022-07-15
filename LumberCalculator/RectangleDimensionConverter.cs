@@ -6,7 +6,7 @@ namespace LumberCalculator
 {
     public class RectangleDimensionConverter : IValueConverter
     {
-        private decimal _multiplier = 3.5m;
+        private decimal _multiplier = 5.5m; //3.5m;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

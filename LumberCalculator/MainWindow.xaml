@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LumberCalculator"
         mc:Ignorable="d"
-        Title="Lumber Calculator" Height="450" Width="800">
+        Title="Lumber Calculator" Height="675" Width="1098.5">
     <Window.Resources>
         <local:RectangleDimensionConverter x:Key="RectangleDimensionConverter"/>
 
@@ -18,144 +18,169 @@
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
         </Style>
     </Window.Resources>
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="5"></ColumnDefinition>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
 
         <Grid
             Grid.Row="0"
+            Grid.ColumnSpan="3">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Save cut-list to file" Command="{Binding SaveCutlistCommand}"></MenuItem>
+                    <MenuItem Header="Load cut-list" Command="{Binding LoadCutListCommand}"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid
+            Grid.Row="1"
             Grid.Column="0">
-            <ListView
+                <ListView
                 ItemsSource="{Binding CutList}"
                 x:Name="lvCutList">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <TextBlock Text="{Binding Name}"></TextBlock>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
 
-        <Grid
-            Grid.Row="0"
-            Grid.Column="2">
-            <Border 
-                BorderBrush="#FF919191"
-                BorderThickness="1">
-                <ScrollViewer
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Auto">
-                    <ItemsControl 
-                        ItemsSource="{Binding PriceList}"
-                        Margin="5pt">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid
-                                    HorizontalAlignment="Left"
-                                    Margin="0,0,0,5">
-                                    <StackPanel
-                                        Orientation="Horizontal">
-                                        <Rectangle
-                                            Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
-                                            Height="{Binding Dimensions.ActualWidth, Converter={StaticResource RectangleDimensionConverter}}" 
-                                            Stroke="Black"></Rectangle>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="2">
+                <Border 
+                    BorderBrush="#FF919191"
+                    BorderThickness="1">
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Auto">
+                        <ItemsControl 
+                            ItemsSource="{Binding PriceList}"
+                            Margin="5pt">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid
+                                        HorizontalAlignment="Left"
+                                        Margin="0,0,0,5">
+                                        <StackPanel
+                                            Orientation="Horizontal">
+                                            <Rectangle
+                                                Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
+                                                Height="{Binding Dimensions.ActualWidth, Converter={StaticResource RectangleDimensionConverter}}" 
+                                                Stroke="Black"></Rectangle>
 
-                                        <TextBlock 
-                                            Margin="10,0,0,0"
-                                            Text="{Binding Description}"></TextBlock>
-                                    </StackPanel>
+                                            <TextBlock 
+                                                Margin="10,0,0,0"
+                                                Text="{Binding Description}"></TextBlock>
+                                        </StackPanel>
 
-                                    <ItemsControl ItemsSource="{Binding CutLengths}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal"></StackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid
-                                                    HorizontalAlignment="Left">
-                                                    <Rectangle
-                                                        Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
-                                                        Height="{Binding Width, Converter={StaticResource RectangleDimensionConverter}}"
-                                                        Fill="CadetBlue"
-                                                        Stroke="Black"></Rectangle>
+                                        <ItemsControl ItemsSource="{Binding CutLengths}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid
+                                                        HorizontalAlignment="Left">
+                                                        <Rectangle
+                                                            Width="{Binding Length, Converter={StaticResource RectangleDimensionConverter}}"
+                                                            Height="{Binding Width, Converter={StaticResource RectangleDimensionConverter}}"
+                                                            Fill="CadetBlue"
+                                                            Stroke="Black"></Rectangle>
 
-                                                    <TextBlock
-                                                        Text="{Binding DimensionName}"
-                                                        HorizontalAlignment="Center"></TextBlock>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Border>
-        </Grid>
+                                                        <TextBlock
+                                                            Text="{Binding DimensionName}"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"></TextBlock>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
 
-        <Grid
-            Grid.Row="1"
+            <Grid
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Margin="0,5,0,0">
-            <DockPanel
+                <DockPanel
                 HorizontalAlignment="Right">
-                <Button 
+                    <Button 
                     x:Name="btnCalculate" 
                     Click="btnCalculate_Click">Calculate</Button>
 
-                <Button 
+                    <Button 
                     x:Name="btnClose" 
                     Click="btnClose_Click">Close</Button>
-            </DockPanel>
+                </DockPanel>
 
-            <DockPanel
+                <DockPanel
                 HorizontalAlignment="Left">
-                <Button
-                    x:Name="btnAddCutlistItem" 
-                    Click="btnAddCutlistItem_Click">Add</Button>
+                    <Button
+                        x:Name="btnAddCutlistItem" 
+                        Click="btnAddCutlistItem_Click">Add</Button>
 
-                <Button
-                    x:Name="btnRemoveCutlistItem" 
-                    Click="btnRemoveCutlistItem_Click">Remove</Button>
-            </DockPanel>
-        </Grid>
+                    <Button
+                        x:Name="btnRemoveCutlistItem" 
+                        Click="btnRemoveCutlistItem_Click">Remove</Button>
 
-        <Grid
-            Grid.Row="1"
+                    <Button
+                        Command="{Binding ClearCutListCommand}">Clear</Button>
+                </DockPanel>
+            </Grid>
+
+            <Grid
+            Grid.Row="2"
             Grid.Column="2"
             Margin="0,5,0,0">
-            <StackPanel
+                <StackPanel
                 Orientation="Horizontal">
-                <Label
+                    <Label
                     VerticalAlignment="Center">Minimum scrap width (inches):</Label>
-                <TextBox
+                    <TextBox
                     Width="50pt"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     Text="{Binding MinimumScrapLength}"></TextBox>
-                <Label
+                    <Label
                     VerticalAlignment="Center"
                     Margin="5,0,0,0">Est. price:</Label>
-                <TextBlock VerticalAlignment="Center">$</TextBlock>
-                <TextBox
+                    <TextBlock VerticalAlignment="Center">$</TextBlock>
+                    <TextBox
                     Width="50pt"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     Text="{Binding EstimatedPrice}"></TextBox>
-            </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

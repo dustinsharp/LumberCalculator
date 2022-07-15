@@ -29,7 +29,7 @@ namespace LumberCalculator
 
         private void btnAddCutlistItem_Click(object sender, RoutedEventArgs e)
         {
-            _vm.AddCutListLumber();
+            _vm.AddCutListLumber(this);
         }
 
         private void btnRemoveCutlistItem_Click(object sender, RoutedEventArgs e)

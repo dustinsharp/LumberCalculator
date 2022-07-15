@@ -14,12 +14,14 @@ namespace LumberCalculator.Windows
 
         public CutListLumber NewCutListLumberItem => _vm.NewCutListLumberItem;
 
-        public AddCutListLumberItem(int identifier, ObservableCollection<StoreLumber> availableLumber)
+        public AddCutListLumberItem(int identifier, ObservableCollection<StoreLumber> availableLumber, Window owner)
         {
             InitializeComponent();
 
             _vm = new AddCutListLumberItemViewModel(identifier, availableLumber);
             DataContext = _vm;
+
+            Owner = owner;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
