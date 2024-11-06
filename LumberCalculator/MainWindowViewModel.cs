@@ -129,11 +129,6 @@ namespace LumberCalculator
                 {_oneByFour, new LumberDimension(_oneByFour, 0.75m, 3.5m)},
                 {_twoByTwo, new LumberDimension(_twoByTwo, 1.5m, 1.5m)},
 
-                /*
-                 * _oneByEight
-                 _oneByFour
-                _twoByTwo =
-                */
             };     
 
             AvailableLumber = new ObservableCollection<StoreLumber>
@@ -170,83 +165,7 @@ namespace LumberCalculator
                 },
             };
 
-            var twoBySix = AvailableLumber.FirstOrDefault(o => o.Dimensions.Name == _twoBySix);
-            var twoByFour = AvailableLumber.FirstOrDefault(o => o.Dimensions.Name == _twoByFour);
-
-            CutList = new ObservableCollection<CutListLumber>
-            {
-                //new CutListLumber
-                //{
-                //    Identifier = 1,
-                //    SelectedStoreLumber = twoBySix,
-                //    Length = 48.0m,
-                //    Quantity = 4,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 2,
-                //    SelectedStoreLumber = twoBySix,
-                //    Length = 36.0m,
-                //    Quantity = 8,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 3,
-                //    SelectedStoreLumber = twoBySix,
-                //    Length = 25.766m,
-                //    Quantity = 4,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 4,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 17.375m,
-                //    Quantity = 2,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 5,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 22.375m,
-                //    Quantity = 2,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 6,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 18.4375m,
-                //    Quantity = 2,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 7,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 11.0m,
-                //    Quantity = 4,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 8,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 6.125m,
-                //    Quantity = 4,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 9,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 13.8125m,
-                //    Quantity = 4,
-                //},
-                //new CutListLumber
-                //{
-                //    Identifier = 10,
-                //    SelectedStoreLumber = twoByFour,
-                //    Length = 14.0625m,
-                //    Quantity = 8,
-                //}
-            };
-
+            CutList = new ObservableCollection<CutListLumber>();
             PriceList = new ObservableCollection<StoreLumber>();
         }
 
@@ -255,13 +174,13 @@ namespace LumberCalculator
             PriceList.Clear();
             RefreshUI();
 
-            foreach (CutListLumber item in CutList)
+            foreach (var item in CutList)
             {
-                decimal storeLumberWidth = item.SelectedStoreLumber.Length; //TODO: How do we select this? Preferred option needed?
-                decimal actualWidth = item.Length + _bladeWidth;
-                decimal currentWidth = actualWidth;
+                var storeLumberWidth = item.SelectedStoreLumber.Length; //TODO: How do we select this? Preferred option needed?
+                var actualWidth = item.Length + _bladeWidth;
+                var currentWidth = actualWidth;
 
-                int currentQuantity = 0;
+                var currentQuantity = 0;
 
                 foreach (var priceItem in PriceList.Where(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength - MinimumScrapLength > actualWidth))
                 {
@@ -273,41 +192,35 @@ namespace LumberCalculator
                     }
 
                     if (currentQuantity >= item.Quantity || !PriceList.Any(o => o.Dimensions.Equals(item.SelectedStoreLumber.Dimensions) && o.ScrapLength - MinimumScrapLength > actualWidth))
-                    {
                         break;
-                    }
                 }
 
                 if (currentQuantity >= item.Quantity)
-                {
                     continue;
-                }
 
                 while (currentQuantity < item.Quantity)
                 {
-                    int iterationQuantity = 0;
+                    var iterationQuantity = 0;
 
                     while (currentWidth <= storeLumberWidth - MinimumScrapLength)
                     {
                         if (currentQuantity >= item.Quantity)
-                        {
                             break;
-                        }
 
                         currentQuantity++;
                         iterationQuantity++;
                         currentWidth += actualWidth;
                     }
 
-                    StoreLumber selectedStoreLumber = item.SelectedStoreLumber.Clone(new Guid());
+                    var selectedStoreLumber = item.SelectedStoreLumber.Clone(new Guid());
 
-                    for (int i = 0; i < iterationQuantity; i++)
+                    for (var i = 0; i < iterationQuantity; i++)
                     {
                         selectedStoreLumber.CutLengths.Add(new CutDimension(actualWidth, selectedStoreLumber.Dimensions, item.Length, item.Identifier));
                     }
 
                     PriceList.Add(selectedStoreLumber);
-                    currentWidth = actualWidth; //reset
+                    currentWidth = actualWidth;
                 }
             }
 
@@ -320,20 +233,20 @@ namespace LumberCalculator
 
         public void OptimizePriceList()
         {
-            List<StoreLumber> priceListItemsToRemove = new List<StoreLumber>();
+            var priceListItemsToRemove = new List<StoreLumber>();
 
-            foreach (StoreLumber lumber in PriceList)
+            foreach (var lumber in PriceList)
             {
                 var moveCandidate = PriceList.FirstOrDefault(o => 
                     o.Dimensions.Equals(lumber.Dimensions) 
                     && o.ScrapLength - MinimumScrapLength > lumber.TotalCutLength
                     && o.Identifier != lumber.Identifier);
 
-                if (moveCandidate != null)
-                {
-                    moveCandidate.CutLengths.AddRange(lumber.CutLengths);
-                    priceListItemsToRemove.Add(lumber);
-                }
+                if (moveCandidate == null) 
+                    continue;
+
+                moveCandidate.CutLengths.AddRange(lumber.CutLengths);
+                priceListItemsToRemove.Add(lumber);
             }
 
             priceListItemsToRemove.ForEach(o => PriceList.Remove(o));
@@ -348,52 +261,43 @@ namespace LumberCalculator
 
         public void AddCutListLumber(Window owner)
         {
-            int identifier = CutList.Any() ? CutList.Select(o => o.Identifier).Max() + 1 : 1;
+            var identifier = CutList.Any() ? CutList.Select(o => o.Identifier).Max() + 1 : 1;
 
-            //Add UI to populate new cutlist item
             var addCutListLumberItemWindow = new AddCutListLumberItem(identifier, AvailableLumber, owner);
             var result = addCutListLumberItemWindow.ShowDialog();
 
-            if (result == true)
-            {
-                CutList.Add(addCutListLumberItemWindow.NewCutListLumberItem);
+            if (result != true) 
+                return;
 
-                //PriceList.Clear();
-                //RefreshUI();
-
-                CalculateLumberNeeded();
-            }
+            CutList.Add(addCutListLumberItemWindow.NewCutListLumberItem);
+            CalculateLumberNeeded();
         }
 
         private void SaveCutList(object obj)
         {
             if (!CutList.Any())
-            {
                 return;
-            }
 
-            CommonSaveFileDialog dialog = new CommonSaveFileDialog
+            var dialog = new CommonSaveFileDialog
             {
                 Filters = { new CommonFileDialogFilter("JSON settings file", ".json") },
             };
 
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            if (dialog.ShowDialog() != CommonFileDialogResult.Ok) 
+                return;
+
+            var cutListJson = JsonConvert.SerializeObject(CutList, Formatting.Indented).Replace("\\r\\n", "\r\n");
+
+            var filename = string.IsNullOrEmpty(Path.GetExtension(dialog.FileName))
+                ? $"{dialog.FileName}.json"
+                : dialog.FileName;
+
+            if (Path.GetExtension(filename) != ".json")
+                filename = filename.Replace(Path.GetExtension(filename), ".json");
+
+            using (var sw = new StreamWriter(filename))
             {
-                var cutListJson = JsonConvert.SerializeObject(CutList, Formatting.Indented).Replace("\\r\\n", "\r\n");
-
-                string filename = string.IsNullOrEmpty(Path.GetExtension(dialog.FileName))
-                    ? $"{dialog.FileName}.json"
-                    : dialog.FileName;
-
-                if (Path.GetExtension(filename) != ".json")
-                {
-                    filename = filename.Replace(Path.GetExtension(filename), ".json");
-                }
-
-                using (StreamWriter sw = new StreamWriter(filename))
-                {
-                    sw.Write(cutListJson);
-                }
+                sw.Write(cutListJson);
             }
         }
 
@@ -401,21 +305,21 @@ namespace LumberCalculator
         {
             CutList.Clear();
 
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            var dialog = new CommonOpenFileDialog
             {
                 IsFolderPicker = false,
                 Filters = { new CommonFileDialogFilter("JSON settings file", ".json") },
             };
 
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                var items = JsonConvert.DeserializeObject<List<CutListLumber>>(File.ReadAllText(dialog.FileName));
-                items.ForEach(item => { CutList.Add(item); });
+            if (dialog.ShowDialog() != CommonFileDialogResult.Ok) 
+                return;
 
-                OnPropertyChanged(nameof(CutList));
+            var items = JsonConvert.DeserializeObject<List<CutListLumber>>(File.ReadAllText(dialog.FileName));
+            items.ForEach(item => { CutList.Add(item); });
 
-                CalculateLumberNeeded();
-            }
+            OnPropertyChanged(nameof(CutList));
+
+            CalculateLumberNeeded();
         }
 
         private void ClearCutList(object obj)
